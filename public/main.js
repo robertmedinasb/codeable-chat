@@ -1,4 +1,10 @@
 const ws = new WebSocket(`ws://localhost:3000`);
+let username = prompt("Hello!, what's your name?");
+Notification.requestPermission().then(function(result) {
+    console.log(result);
+  });
+const text = `${username} is connected`;
+ws.onopen = () =>  new Notification('To do list', { body: text });
 const generateDate = () => {
     return new Date().toLocaleTimeString("en-US", {
       hour12: true,
@@ -9,8 +15,12 @@ const generateDate = () => {
 const log = document.getElementById("log");
 document.querySelector("button").onclick = () => {
     let text = document.getElementById("text");
-    ws.send(text.value);
-    log.innerHTML += generateDate() + " You: " + text.value + "<br>";
+    let message = {
+        text: text.value,
+        username: username
+    }
+    ws.send(JSON.stringify(message));
+    log.innerHTML += generateDate() + " " + message.username + ": " + message.text + "<br>";
     text.value =""
 };
 ws.onmessage = (event) => {

@@ -5,6 +5,7 @@ wss.on("connection", (ws) => {
     console.log("Connection opened 🚀");
     ws.send("Codeable's chat connected 🚀");
     ws.on("message", (message) => {
+      console.log(message)
         wss.clients.forEach((client) => {
           if (client != ws) client.send(message);
         });
